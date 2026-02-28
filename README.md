@@ -71,31 +71,56 @@ python record-and-transcribe.py -d 10 -o my_clip.wav
 - Records 16 kHz mono WAV to match what Voxtral expects.
 - macOS will prompt for microphone permission on first run.
 
-Streaming speech-to-text (v3)
+Streaming speech-to-text (v3 - VAD-based)
 
-`streaming-transcribe.py` provides continuous, toggle-able transcription — speak whenever you want, pause/resume with a hotkey.
+`streaming-transcribe.py` provides continuous, toggle-able transcription using Voice Activity Detection (VAD) — speak naturally, and the system detects when you pause to transcribe complete phrases.
 
 ```bash
-# start streaming with default 5s chunks
+# start streaming with defaults (0.5s silence threshold)
 python streaming-transcribe.py
 
-# use 10s chunks, save transcripts to file
-python streaming-transcribe.py -d 10 -o transcripts.log
+# adjust silence threshold for faster/slower speakers
+python streaming-transcribe.py --silence-threshold 0.3  # faster
+python streaming-transcribe.py --silence-threshold 0.8  # slower
+
+# save transcripts to file
+python streaming-transcribe.py -o transcripts.log
+
+# verbose mode with VAD debug info
+python streaming-transcribe.py -v
+
+# combine options
+python streaming-transcribe.py --silence-threshold 0.4 -o session.log -v
 ```
 
 **Controls:**
 - `SPACE`: toggle recording on/off
 - `ESC`: stop and exit
 
-**How it works:**
-- Audio capture runs continuously in background thread
-- Chunks are queued and transcribed in parallel
+**How it works (VAD-based):**
+- Uses Silero VAD to detect speech vs. silence in real-time
+- Accumulates audio while you speak
+- When silence is detected (default 0.5s), sends the complete phrase for transcription
+- **No word cutting**: phrases end at natural pauses, so no overlapping or deduplication needed
 - Model loads once at startup (includes warmup to reduce first-chunk latency)
-- Real-time timestamps show when each transcript was captured
+
+**VAD Parameters:**
+- `--silence-threshold`: duration of silence to end a phrase (default 0.5s)
+- `--min-speech-duration`: minimum phrase length to transcribe (default 0.3s, filters noise)
+- `--max-phrase-duration`: safety limit for long phrases (default 30s)
 
 **Requirements:**
-- `pynput` for keyboard control (added to `reqs.in`)
+- `torch` and Silero VAD (added to `reqs.in`)
+- `pynput` for keyboard control
 - Same Voxtral model and dependencies as other scripts
+- **macOS users**: Grant accessibility permissions when prompted for keyboard monitoring (System Settings → Privacy & Security → Accessibility)
+
+**Benefits of VAD approach:**
+- Natural phrase boundaries improve accuracy
+- No repeated words or text deduplication
+- Adapts to speaker pace automatically
+- Filters out background noise bursts
+- Filters out background noise bursts
 
 Notes
 

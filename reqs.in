@@ -2,4 +2,6 @@ mlx-voxtral
 sounddevice
 soundfile
 pynput
+torch
+torchaudio
 git+https://github.com/huggingface/transformers
