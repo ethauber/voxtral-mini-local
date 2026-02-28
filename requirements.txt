@@ -35,6 +35,12 @@ pydantic==2.12.5
 pydantic-extra-types==2.11.0
 pydantic_core==2.41.5
 Pygments==2.19.2
+pynput==1.8.1
+pyobjc-core==12.1
+pyobjc-framework-ApplicationServices==12.1
+pyobjc-framework-Cocoa==12.1
+pyobjc-framework-CoreText==12.1
+pyobjc-framework-Quartz==12.1
 PyYAML==6.0.3
 referencing==0.37.0
 regex==2026.1.15
@@ -44,6 +50,7 @@ rpds-py==0.30.0
 safetensors==0.7.0
 sentencepiece==0.2.1
 shellingham==1.5.4
+six==1.17.0
 sounddevice==0.5.5
 soundfile==0.13.1
 soxr==1.0.0

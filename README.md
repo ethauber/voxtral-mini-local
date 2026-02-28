@@ -71,6 +71,32 @@ python record-and-transcribe.py -d 10 -o my_clip.wav
 - Records 16 kHz mono WAV to match what Voxtral expects.
 - macOS will prompt for microphone permission on first run.
 
+Streaming speech-to-text (v3)
+
+`streaming-transcribe.py` provides continuous, toggle-able transcription — speak whenever you want, pause/resume with a hotkey.
+
+```bash
+# start streaming with default 5s chunks
+python streaming-transcribe.py
+
+# use 10s chunks, save transcripts to file
+python streaming-transcribe.py -d 10 -o transcripts.log
+```
+
+**Controls:**
+- `SPACE`: toggle recording on/off
+- `ESC`: stop and exit
+
+**How it works:**
+- Audio capture runs continuously in background thread
+- Chunks are queued and transcribed in parallel
+- Model loads once at startup (includes warmup to reduce first-chunk latency)
+- Real-time timestamps show when each transcript was captured
+
+**Requirements:**
+- `pynput` for keyboard control (added to `reqs.in`)
+- Same Voxtral model and dependencies as other scripts
+
 Notes
 
 - Virtual environment: `.venv-v2` (`python -m venv .venv-v2 && source .venv-v2/bin/activate`).
