@@ -1,3 +1,4 @@
 mlx-voxtral
+sounddevice
 soundfile
 git+https://github.com/huggingface/transformers
